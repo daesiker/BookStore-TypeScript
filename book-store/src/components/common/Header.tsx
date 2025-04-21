@@ -1,42 +1,28 @@
 import { styled } from "styled-components";
 import logo from "../../assets/images/logo.png";
-import { FaSignInAlt, FaRegUser } from "react-icons/fa";
-
-const CATEGORY = [
-    {
-        id: null,
-        name: "전체"
-    },
-    {
-        id: 0,
-        name: "동화"
-    },
-    {
-        id: 1,
-        name: "소설"
-    },
-    {
-        id: 2,
-        name: "사회"
-    },
-]
+import { MdLogin, MdPerson } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { useCategory } from "../../hooks/useCategory";
 
 
 
 function Header() {
+    
+    const {category} = useCategory();
+
     return(
         <HeaderStyle>
             <h1 className="logo">
-                <img src={logo} alt="book store" />
+                <Link to="/"><img src={logo} alt="book store" /></Link>
             </h1>
 
             <nav className="category">
                 <ul>
-                    {CATEGORY.map((item) => (
+                    {category.map((item) => (
                         <li key = {item.id}>
-                            <a href={item.id === null ? "/books" : `/books?category_id=${item.id}`}>
+                            <Link to={item.id === null ? "/books" : `/books?category_id=${item.id}`}>
                                 {item.name}
-                            </a>
+                            </Link>
                         </li>
                     ))}
                 </ul>
@@ -46,12 +32,12 @@ function Header() {
                 <ul>
                     <li>
                         <a href="/login">
-                            <FaSignInAlt /> 로그인
+                            <MdLogin /> 로그인
                         </a>
                     </li>
                     <li>
                         <a href="/login">
-                            <FaRegUser /> 회원가입
+                            <MdPerson /> 회원가입
                         </a>
                     </li>
                 </ul>
