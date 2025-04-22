@@ -1,36 +1,44 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React, { useState } from 'react';
 import Title from '../components/common/Title';
 import InputText from '../components/common/InputText';
 import Button from '../components/common/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { signup } from '../api/auth.api';
+import { login, signup } from '../api/auth.api';
 import { useAlert } from '../hooks/useAlert';
+import { SignupStyle } from './SignUp';
+import { useAuthStore } from '../store/authStore';
+
 
 export interface SignupProps {
     email: string;
     password: string;
 }
 
-function SignUp() {
+function Login() {
 
     const navigate = useNavigate();
-    const showAlert = useAlert()
+    const showAlert = useAlert();
 
+    const {isloggedIn, storeLogin, storeLogout} = useAuthStore()
+    
     const {register, handleSubmit, formState: {errors},} = useForm<SignupProps>();
 
     const onSubmit = (data: SignupProps) => {
-        signup(data).then((res) => {
-            showAlert("회원가입이 완료되었습니다.")
-            navigate("/login");
+        login(data).then((res) => {
+            storeLogin(res.token);
+            console.log(res.token);
+            showAlert("로그인 완료되었습니다.");
+            navigate("/");
+        }, (error) => {
+            showAlert("로그인이 실패했습니다.");
         })
     };
 
 
   return (
     <>
-        <Title size='large'>회원가입</Title>
+        <Title size='large'>로그인</Title>
         <SignupStyle>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <fieldset>
@@ -55,7 +63,7 @@ function SignUp() {
                     </Button>
                 </fieldset>
                 <div className='info'>
-                    <Link to="/reset">비밀번호 초기화</Link>
+                    <Link to="/reset">로그인</Link>
                 </div>
             </form>
         </SignupStyle>
@@ -63,31 +71,4 @@ function SignUp() {
   )
 }
 
-
-export const SignupStyle = styled.div`
-    max-width: ${({theme}) => theme.layout.width.small};
-    margin: 80px auto;
-
-    fieldset {
-        border: 0;
-        padding: 0 0 8px 0;
-        .error-text {
-            color: red;
-        }
-    }
-
-    input {
-        width: 100%;
-    }
-
-    button {
-        width: 100%;
-    }
-
-    .info {
-        text-align:center;
-        padding: 16px 0 0 0;
-    }
-`;
-
-export default SignUp
+export default Login

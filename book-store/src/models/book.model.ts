@@ -10,7 +10,7 @@ export interface Book {
     author: string;
     pages: number;
     contents: string;
-    prive: number;
+    price: number;
     likes: number;
     pubDate: string;
 }
